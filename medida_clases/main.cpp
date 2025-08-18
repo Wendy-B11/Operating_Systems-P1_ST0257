@@ -260,6 +260,8 @@ int main() {
         break;
             
             case 7: { 
+                //_________________PATRIMONIO____________________yorPatrimonioPorReferencia(std::make_unique<std::vector<Persona>>(*personas));
+
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -278,20 +280,19 @@ int main() {
                     Persona::encontrarMasLongevoPais_ref(std::move(personas), masLongeva);
                     std::cout << "\nLa persona mas longeva del pais es: ";
                     masLongeva.mostrarResumen();
-                    std::cout << " con edad: " << masLongeva.mostrarEdad() << " anios.\n"; // Pasando la referencia
+                    std::cout << " con edad: " << masLongeva.mostrarEdad() << " años.\n"; // Pasando la referencia
                 } else if (subp == 2) {
                     Persona masLongeva;
-                    //Persona::mostrarMasLongevoPorCiudad_ref(std::move(personas), masLongeva);
+                    Persona::mostrarMasLongevoPorCiudad_ref(std::move(personas), masLongeva);
                 } else {
                     std::cout << "Opcion no valida.\n";
+
+                //_________________PATRIMONIO____________________
+                
+                Persona::mostrarMayorPatrimonioPorReferencia(std::move(personas));
     }
-                // Llama a la función para mostrar la persona con mayor patrimonio
-                Persona::mostrarMayorPatrimonioPorValor(*personas);
 
-                //------------------------PATRIMONIO------------------------
-                         
-
-                //---------------------- DECLARANTES RENTA -----------------
+                //---------------       //--------------------- DECLARANTES RENTA -----------------
                 std::cout << "\nDeclarantes de renta - Referencia\n";
                 std::map<char, std::vector<Persona>> grupos;
                 Persona::agruparPersonasPorCalendarioRef(std::move(personas), grupos);

@@ -197,44 +197,47 @@ void Persona::encontrarMasLongevoPais_ref(std::unique_ptr<std::vector<Persona>> 
 
 // Recibe una REFERENCIA CONSTANTE al vector.
 void Persona::mostrarMasLongevoPorCiudad_ref(std::unique_ptr<std::vector<Persona>> personas, Persona& masLongeva) {
-    if (personas->empty()) {
+    // 1. Verificación de seguridad: Asegúrate de que el puntero no esté vacío.
+    if (!personas || personas->empty()) {
         std::cout << "\nNo hay datos para analizar.\n";
         return;
     }
 
-    masLongeva = personas->at(0); // Asumimos que la primera es la más longeva
-
-    for (size_t i = 1; i < personas->size(); i++) {
-        if (personas->at(i).mostrarEdad() > masLongeva.mostrarEdad()) {
-            masLongeva = personas->at(i);
-        }
-    }
-
-    // Agrupa las personas del vector original (sin copiarlo).
+    // 2. Agrupa las personas por ciudad SIN MOVER el puntero.
+    //    Simplemente leemos los datos que contiene.
     std::map<std::string, std::vector<Persona>> gruposCiudad;
-    Persona::agruparPersonasPorCiudad_ref(std::move(personas), gruposCiudad);
+    for (const auto& persona : *personas) { // Desreferencia con '*' para acceder al vector
+        gruposCiudad[persona.getCiudadNacimiento()].push_back(persona);
+    }
+    // ¡Importante! 'personas' (el unique_ptr) sigue siendo válido aquí.
 
-    std::cout << "\n--- Persona más longeva por ciudad ---\n";
+    std::cout << "\n--- Persona más longeva por ciudad (version por Referencia) ---\n";
 
+    // 3. Itera sobre el mapa para encontrar y mostrar el resultado por ciudad.
     for (const auto& par : gruposCiudad) {
         const std::string& ciudad = par.first;
-        const std::vector<Persona> personasEnCiudad = par.second;
+        const std::vector<Persona>& personasEnCiudad = par.second;
 
         if (personasEnCiudad.empty()) continue;
 
-        const Persona* masLongeva = &personasEnCiudad.at(0);
-        
+        // Encuentra al más longevo DENTRO de esa ciudad.
+        const Persona* punteroMasLongeva = &personasEnCiudad[0]; // Usamos un puntero local
         for (size_t i = 1; i < personasEnCiudad.size(); i++) {
-            if (personasEnCiudad.at(i).mostrarEdad() > masLongeva->mostrarEdad()) {
-                masLongeva = &personasEnCiudad.at(i);
+            if (personasEnCiudad[i].mostrarEdad() > punteroMasLongeva->mostrarEdad()) {
+                punteroMasLongeva = &personasEnCiudad[i];
             }
         }
         
         std::cout << ciudad << ": la persona mas longeva es ";
-        masLongeva->mostrarResumen();
-        std::cout << " con " << masLongeva->mostrarEdad() << " anios.\n";
+        punteroMasLongeva->mostrarResumen();
+        std::cout << " con " << punteroMasLongeva->mostrarEdad() << " anios.\n";
     }
+
+    // Nota: La primera búsqueda que tenías y el parámetro 'masLongeva' no se usan
+    // en esta lógica por ciudad, lo cual indica una posible redundancia en el diseño.
+    // La función ahora hace lo que su nombre indica.
 }
+
 
 // Recibe una REFERENCIA CONSTANTE.
 void Persona::analizarLongevidad_ref(std::unique_ptr<std::vector<Persona>> personas) {
@@ -348,6 +351,82 @@ std::map<char, std::vector<Persona>> Persona::agruparPersonasPorCalendarioValor(
         }
     }
     return grupos;
+}
+
+void Persona::mostrarMayorPatrimonioPorReferencia(std::unique_ptr<std::vector<Persona>> personas) {
+    if (!personas || personas->empty()) {
+        std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+        return;
+    }
+    Persona::menuPatrimonio();
+    int subop;
+    std::cout << "\nSeleccione una opción: ";
+    std::cin >> subop;
+
+    if (subop == 1) {
+        // Mayor patrimonio en el país
+        Persona mayor = personas->at(0);
+        for (const auto& p : *personas) {
+            if (p.mostrarPatrimonio() > mayor.mostrarPatrimonio()) {
+                mayor = p;
+            }
+        }
+        std::cout << "Persona con mayor patrimonio en el país:\n";
+        mayor.mostrarResumen();
+        std::cout << " Patrimonio: " << mayor.mostrarPatrimonio() << "\n";
+    } else if (subop == 2) {
+        // Mostrar la persona con mayor patrimonio de cada ciudad
+        std::map<std::string, std::vector<Persona>> gruposCiudad;
+        Persona::agruparPersonasPorCiudad_ref(std::move(personas), gruposCiudad);
+
+        std::cout << "\n--- Persona con mayor patrimonio por ciudad ---\n";
+
+        for (const auto& par : gruposCiudad) {
+            const std::string& ciudad = par.first;
+            const std::vector<Persona>& personasEnCiudad = par.second;
+
+            if (personasEnCiudad.empty()) {
+                continue;
+            }
+
+            Persona masRica = personasEnCiudad.at(0);
+            for (size_t i = 1; i < personasEnCiudad.size(); ++i) {
+                if (personasEnCiudad.at(i).getPatrimonio() > masRica.getPatrimonio()) {
+                    masRica = personasEnCiudad.at(i);
+                }
+            }
+            
+            std::cout << ciudad << ": la persona con mayor patrimonio es ";
+            masRica.mostrarResumen();
+            std::cout << " con patrimonio: $" << masRica.getPatrimonio() << "\n";
+        }
+    } else if (subop == 3) {
+        // Mostrar la persona con mayor patrimonio de cada grupo (A/B/C)
+        std::map<char, std::vector<Persona>> gruposPorCalendario;
+        Persona::agruparPersonasPorCalendarioRef(std::move(personas), gruposPorCalendario);
+
+        std::cout << "\n--- Persona con mayor patrimonio por grupo ---\n";
+
+        for (const auto& par : gruposPorCalendario) {
+            char grupo = par.first;
+            const std::vector<Persona>& personasEnGrupo = par.second;
+
+            if (personasEnGrupo.empty()) {
+                continue;
+            }
+
+            Persona masRica = personasEnGrupo[0];
+            for (size_t i = 1; i < personasEnGrupo.size(); ++i) {
+                if (personasEnGrupo[i].getPatrimonio() > masRica.getPatrimonio()) {
+                    masRica = personasEnGrupo[i];
+                }
+            } 
+
+            std::cout << "Grupo " << grupo << ": la persona con mayor patrimonio es ";
+            masRica.mostrarResumen();
+            std::cout << " con patrimonio: $" << masRica.getPatrimonio() << "\n";
+        }
+    }
 }
 
 // arriba es de jotape 

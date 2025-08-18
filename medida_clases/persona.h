@@ -118,7 +118,7 @@ public:
     static std::vector<EstadisticasCiudad> RankingCiudadValor(std::vector<Persona> personas);
     static void mostrarMayorPatrimonioPorValor(std::vector<Persona> personas);
 
-        
+     static void mostrarMayorPatrimonioPorReferencia(std::unique_ptr<std::vector<Persona>> personas);   
 };
 
 #endif // PERSONA_H
