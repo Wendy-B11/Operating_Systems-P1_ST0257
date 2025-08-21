@@ -2,6 +2,7 @@
 #include <iomanip> // Para std::setprecision
 #include <algorithm>
 #include <vector>
+#include <map>
 
 /**
  * Implementación del constructor de Persona.
@@ -88,5 +89,44 @@ void Persona::edadMasLongevaPaisRef(const std::vector<Persona>& personas){
 
     std::cout << "La persona más longeva es ";
     pPersonaMasVieja->mostrarResumen(); 
-    std::cout << " con: " << pPersonaMasVieja->calcularEdad() << " años.\n";
 }
+
+//Implementacion de agrupar personas por ciudad
+std::map<std::string, std::vector<Persona>> Persona::agruparPersonasPorCiudad(const std::vector<Persona> personas) { 
+    std::map<std::string, std::vector<Persona>> gruposc;
+
+    for (const auto& persona : personas) {
+
+        std::string ciudad = persona.getCiudadNacimiento();
+        gruposc[ciudad].push_back(persona);
+
+    }
+    return gruposc;
+}
+
+std::vector<Persona> Persona::edadMasLongevaCiudad(const std::vector<Persona> personas) {
+    std::map<std::string, Persona> ciudadMasVieja;
+    std::vector<Persona> resultado;
+
+    auto gruposc = Persona::agruparPersonasPorCiudad(personas);
+
+    for (const auto& par : gruposc) {
+        const std::string& ciudad = par.first;
+        const std::vector<Persona>& personasCiudad = par.second;
+
+        if (personasCiudad.empty()) {
+            continue;
+        }
+
+        Persona masLongeva = personasCiudad[0];
+
+        for (size_t i = 1; i < personasCiudad.size(); ++i) {
+            if (personasCiudad[i].calcularEdad() > masLongeva.calcularEdad()) {
+                masLongeva = personasCiudad[i];
+            }
+        }
+        resultado.push_back(masLongeva);
+    }
+    return resultado;
+}
+

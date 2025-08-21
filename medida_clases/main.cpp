@@ -166,6 +166,12 @@ int main() {
                 vieja.mostrarResumen();
                 std::cout << "\nUsando referencias:\n";
                 Persona::edadMasLongevaPaisRef(*personas);
+                std::cout << "\nMas longeva por ciudad:\n";
+                std::vector<Persona> viejaCiudad = Persona::edadMasLongevaCiudad(*personas);
+                for (const auto& persona : viejaCiudad) {
+                    persona.mostrarResumen();
+                    std::cout << "\n"; 
+                }
                 break;
             }
 

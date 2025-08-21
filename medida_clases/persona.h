@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <map>
 
 /**
  * Clase que representa una persona con datos personales y financieros.
@@ -76,6 +77,15 @@ public:
 
     // Muesta la edad de la persona mas longeva por pais utilizando apuntadores
     static void edadMasLongevaPaisRef(const std::vector<Persona>& personas);
+
+    // Agrupa personas por ciudad de nacimiento
+    static std::map<std::string, std::vector<Persona>> agruparPersonasPorCiudad(const std::vector<Persona> personas);
+
+    // Muestra la edad de la persona mas longeva por ciudad utilizando valores
+    static std::vector<Persona> edadMasLongevaCiudad(const std::vector<Persona> personas);
+
+    // Muestra la edad de la persona mas longeva por ciudad utilizando apuntadores
+    static void edadMasLongevaCiudadRef(const std::vector<Persona>& personas);
 };
 
 #endif // PERSONA_H
