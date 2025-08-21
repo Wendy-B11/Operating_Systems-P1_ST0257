@@ -5,8 +5,6 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include <map>
-#include <memory> // Para std::unique_ptr
 
 /**
  * Clase que representa una persona con datos personales y financieros.
@@ -26,12 +24,8 @@ private:
     double patrimonio;            // Patrimonio total (activos)
     double deudas;                // Deudas totales (pasivos)
     bool declaranteRenta;         // Si es declarante de renta
-    std::string ciudad;
-    char grupo;
 
 public:
-
-    Persona() = default; // Constructor por defecto
     /**
      * Constructor para inicializar todos los atributos de la persona.
      * 
@@ -39,6 +33,8 @@ public:
      * CÓMO: Recibe cada atributo por valor y los mueve a los miembros correspondientes.
      * PARA QUÉ: Construir objetos Persona completos y válidos.
      */
+    Persona(); // Constructor por defecto
+
     Persona(std::string nom, std::string ape, std::string id, 
             std::string ciudad, std::string fecha, double ingresos, 
             double patri, double deud, bool declara);
@@ -72,53 +68,14 @@ public:
      */
     void mostrarResumen() const;
 
-    int mostrarEdad() const;
+    // Calcula la edad de una persona
+    int calcularEdad() const;
 
-    std::string mostrarCiudad() const { return ciudad; }
-    char mostrarGrupo() const { return grupo; }
-    double mostrarPatrimonio() const { return patrimonio; }
-    struct EstadisticasGrupo {
-        char idGrupo;
-        long patrimonioTotal = 0; 
-        double patrimonioPromedio = 0.0;
-        int numPersonas = 0;
-    };
-    struct EstadisticasCiudad {
-        std::string nombreCiudad;
-        long patrimonioTotal = 0; 
-        double patrimonioPromedio = 0.0;
-        int numPersonas = 0;
-    };
+    // Muestra la edad de la persona mas longeva por pais utilizando valores
+    static Persona edadMasLongevaPais(const std::vector<Persona> personas);
 
-    static Persona encontrarMasLongevoPaisValor(const std::vector<Persona> personas);
-    static void encontrarMasLongevoPais_ref(std::unique_ptr<std::vector<Persona>> personas, Persona& masLongeva);
-    
-    static void mostrarMasLongevoPorCiudad(std::vector<Persona> personas);
-    static void analizarLongevidad(std::vector<Persona> personas);
-    static void analizarLongevidad_ref(std::unique_ptr<std::vector<Persona>> personas);
-
-    static void agruparPersonasPorCiudad_ref(std::unique_ptr<std::vector<Persona>> personas, std::map<std::string, std::vector<Persona>>& gruposc);
-    static void mostrarMasLongevoPorCiudad_ref(std::unique_ptr<std::vector<Persona>> personas, Persona& masLongeva);
-    static std::map<std::string, std::vector<Persona>> agruparPersonasPorCiudadValor(const std::vector<Persona> personas);
-
-    static void menuPatrimonio();
-    
-    static void agruparPersonasPorCalendarioRef(std::unique_ptr<std::vector<Persona>> personas, std::map<char, std::vector<Persona>>& grupos); 
-    static std::map<char, std::vector<Persona>> agruparPersonasPorCalendarioValor(const std::vector<Persona>& personas);
-
-    // Declarantes de renta
-    static std::map<char, std::vector<Persona>> DeclarantesPorGrupoValor(std::map<char, std::vector<Persona>> grupos);
-    static void DeclarantesPorGrupoReferencia(std::map<char, std::vector<Persona>> &grupos, std::map<char, std::vector<Persona>>& grupoDeclarantes);
-    
-    // Ranking de riqueza por agrupación
-    //static void RankingAgrupRef(std::unique_ptr<std::vector<Persona>> personas);
-    static std::vector<EstadisticasGrupo> RankingAgrupValor(std::vector<Persona> personas);
-
-    // Ranking de riqueza por ciudad
-    static std::vector<EstadisticasCiudad> RankingCiudadValor(std::vector<Persona> personas);
-    static void mostrarMayorPatrimonioPorValor(std::vector<Persona> personas);
-
-     static void mostrarMayorPatrimonioPorReferencia(std::unique_ptr<std::vector<Persona>> personas);   
+    // Muesta la edad de la persona mas longeva por pais utilizando apuntadores
+    static void edadMasLongevaPaisRef(const std::vector<Persona>& personas);
 };
 
 #endif // PERSONA_H
