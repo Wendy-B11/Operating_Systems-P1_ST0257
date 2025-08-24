@@ -92,24 +92,12 @@ void Persona::edadMasLongevaPaisRef(const std::vector<Persona>& personas){
     pPersonaMasVieja->mostrarResumen(); 
 }
 
-//Implementacion de agrupar personas por ciudad
-std::map<std::string, std::vector<Persona>> Persona::agruparPersonasPorCiudad(const std::vector<Persona> personas) { 
-    std::map<std::string, std::vector<Persona>> gruposc;
-
-    for (const auto& persona : personas) {
-
-        std::string ciudad = persona.getCiudadNacimiento();
-        gruposc[ciudad].push_back(persona);
-
-    }
-    return gruposc;
-}
 
 std::vector<Persona> Persona::edadMasLongevaCiudad(const std::vector<Persona> personas) {
     std::map<std::string, Persona> ciudadMasVieja;
     std::vector<Persona> resultado;
 
-    auto gruposc = Persona::agruparPersonasPorCiudad(personas);
+    auto gruposc = Persona::agruparCiudad(personas);
 
     for (const auto& par : gruposc) {
         const std::string& ciudad = par.first;

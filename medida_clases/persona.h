@@ -108,9 +108,6 @@ public:
     //Ranking de riqueza por ciudad - Referencia
     static void rankingRiquezaCiudadRef(const std::map<std::string, std::vector<Persona>>& ciudad, std::vector<std::pair<std::string, double>>& ranking);
 
-    // Agrupa personas por ciudad de nacimiento
-    static std::map<std::string, std::vector<Persona>> agruparPersonasPorCiudad(const std::vector<Persona> personas);
-
     // Muestra la edad de la persona mas longeva por ciudad utilizando valores
     static std::vector<Persona> edadMasLongevaCiudad(const std::vector<Persona> personas);
 
