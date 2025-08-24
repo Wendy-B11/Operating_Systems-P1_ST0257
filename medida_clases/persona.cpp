@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <tuple> 
 
 /**
  * Implementación del constructor de Persona.
@@ -130,3 +131,163 @@ std::vector<Persona> Persona::edadMasLongevaCiudad(const std::vector<Persona> pe
     return resultado;
 }
 
+
+
+
+// Agrupar por calendario - Por Valor
+std::map<std::string, std::vector<Persona>> Persona::agruparCalendario(const std::vector<Persona> personas){
+    std::map<std::string, std::vector<Persona>> calendario;
+    for (const Persona& persona : personas){
+        std::string ultimosDos = (persona.id).substr((persona.id).length() - 2, 2);
+        int ultimosDosInt = std::stoi(ultimosDos);
+        if (ultimosDosInt >= 0 && ultimosDosInt <= 39){
+            calendario["A"].push_back(persona);
+        } else if (ultimosDosInt >= 40 && ultimosDosInt <= 79){
+            calendario["B"].push_back(persona);
+        } else if (ultimosDosInt >= 80 && ultimosDosInt <= 99){
+            calendario["C"].push_back(persona); 
+        }
+    }
+    return calendario;
+}
+
+// Agrupar por calendario - Por Referencia
+void Persona::agruparCalendarioRef(const std::vector<Persona>& personas, std::map<std::string, std::vector<Persona>>& calendario){
+    for (const Persona& persona : personas){
+        std::string ultimosDos = (persona.id).substr((persona.id).length() - 2, 2);
+        int ultimosDosInt = std::stoi(ultimosDos);
+        if (ultimosDosInt >= 0 && ultimosDosInt <= 39){
+            calendario["A"].push_back(persona);
+        } else if (ultimosDosInt >= 40 && ultimosDosInt <= 79){
+            calendario["B"].push_back(persona);
+        } else if (ultimosDosInt >= 80 && ultimosDosInt <= 99){
+            calendario["C"].push_back(persona); 
+        }
+    }
+}
+
+// Agrupar por ciudad - Por Valor
+std::map<std::string, std::vector<Persona>> Persona::agruparCiudad(const std::vector<Persona> personas){
+    std::map<std::string, std::vector<Persona>> ciudad;
+    for (const Persona& persona : personas){
+        ciudad[persona.getCiudadNacimiento()].push_back(persona);
+    }
+    return ciudad;
+}
+
+// Agrupar por ciudad - Por Referencia
+void Persona::agruparCiudadRef(const std::vector<Persona>& personas, std::map<std::string, std::vector<Persona>>& ciudad){
+    for (const Persona& persona : personas){
+        ciudad[persona.getCiudadNacimiento()].push_back(persona);
+    }
+}      
+
+// Declarantes de renta - Por Valor
+std::map<std::string, std::vector<Persona>> Persona::declarantesRenta(std::map<std::string, std::vector<Persona>> personas){
+    std::map<std::string, std::vector<Persona>> declarantes;
+    for (const auto& grupo : personas){
+        for (const Persona& persona : grupo.second){
+            if (persona.getDeclaranteRenta()){
+                declarantes[grupo.first].push_back(persona);
+            }
+        }
+    }
+    return declarantes;
+}
+
+//Declarantes de renta - Por Referencia
+void Persona::declarantesRentaRef(const std::map<std::string, std::vector<Persona>>& personas, std::map<std::string, std::vector<Persona>>& declarantes){
+    for (const auto& grupo : personas){
+        for (const Persona& persona : grupo.second){
+            if (persona.getDeclaranteRenta()){
+                declarantes[grupo.first].push_back(persona);
+            }
+        }
+    }
+}
+
+// Ranking de riqueza por agrupación - Por valor
+std::vector<std::pair<std::string, double>> Persona::rankingRiqueza(const std::map<std::string, std::vector<Persona>> calendario) {
+    // Calculamos la suma de ingresos para cada grupo 
+    std::map<std::string, double> sumasPorCalendario;
+    for (const auto& par : calendario) { 
+        const std::string grupo = par.first;
+        const std::vector<Persona> personasDelGrupo = par.second;
+        double sumaTotalGrupo = 0.0;
+        for (const Persona& persona : personasDelGrupo) { 
+            sumaTotalGrupo += persona.getIngresosAnuales();
+        }
+        sumasPorCalendario[grupo] = sumaTotalGrupo;
+    }
+    // Map de sumas a un vector de pares para poder ordenarlo
+    std::vector<std::pair<std::string, double>> ranking(sumasPorCalendario.begin(), sumasPorCalendario.end());
+    // Ordenar el vector de forma descendente basado en los ingresos
+    std::sort(ranking.begin(), ranking.end(), [](const std::pair<std::string, double> a, const std::pair<std::string, double> b) {
+        return a.second > b.second; 
+    });
+    return ranking;
+}
+
+// Ranking de riqueza por agrupación - Por referencia
+void Persona::rankingRiquezaRef(const std::map<std::string, std::vector<Persona>>& calendario, std::vector<std::pair<std::string, double>>& ranking) {
+    // Calculamos la suma de ingresos para cada grupo 
+    std::map<std::string, double> sumasPorCalendario;
+    for (const auto& par : calendario) { 
+        const std::string grupo = par.first;
+        const std::vector<Persona> personasDelGrupo = par.second;
+        double sumaTotalGrupo = 0.0;
+        for (const Persona& persona : personasDelGrupo) { 
+            sumaTotalGrupo += persona.getIngresosAnuales();
+        }
+        sumasPorCalendario[grupo] = sumaTotalGrupo;
+    }
+    // Map de sumas a un vector de pares para poder ordenarlo
+    ranking.assign(sumasPorCalendario.begin(), sumasPorCalendario.end());
+    // Ordenar el vector de forma descendente basado en los ingresos
+    std::sort(ranking.begin(), ranking.end(), [](const std::pair<std::string, double> a, const std::pair<std::string, double> b) {
+        return a.second > b.second; 
+    });
+}
+
+// Ranking de riqueza por ciudad - Por Valor
+std::vector<std::pair<std::string, double>> Persona::rankingRiquezaCiudad(const std::map<std::string, std::vector<Persona>> ciudad) {
+    // Calculamos la suma de ingresos para cada grupo 
+    std::map<std::string, double> sumasPorCiudad;
+    for (const auto& par : ciudad) { 
+        const std::string grupo = par.first;
+        const std::vector<Persona> personasDelGrupo = par.second;
+        double sumaTotalGrupo = 0.0;
+        for (const Persona& persona : personasDelGrupo) { 
+            sumaTotalGrupo += persona.getIngresosAnuales();
+        }
+        sumasPorCiudad[grupo] = sumaTotalGrupo;
+    }
+    // Map de sumas a un vector de pares para poder ordenarlo
+    std::vector<std::pair<std::string, double>> ranking(sumasPorCiudad.begin(), sumasPorCiudad.end());
+    // Ordenar el vector de forma descendente basado en los ingresos
+    std::sort(ranking.begin(), ranking.end(), [](const std::pair<std::string, double> a, const std::pair<std::string, double> b) {
+        return a.second > b.second; 
+    });
+    return ranking;
+}
+
+// Ranking de riqueza por ciudad - Por Referencia
+void Persona::rankingRiquezaCiudadRef(const std::map<std::string, std::vector<Persona>>& ciudad, std::vector<std::pair<std::string, double>>& ranking) {
+    // Calculamos la suma de ingresos para cada grupo 
+    std::map<std::string, double> sumasPorCiudad;
+    for (const auto& par : ciudad) { 
+        const std::string grupo = par.first;
+        const std::vector<Persona> personasDelGrupo = par.second;
+        double sumaTotalGrupo = 0.0;
+        for (const Persona& persona : personasDelGrupo) { 
+            sumaTotalGrupo += persona.getIngresosAnuales();
+        }
+        sumasPorCiudad[grupo] = sumaTotalGrupo;
+    }
+    // Map de sumas a un vector de pares para poder ordenarlo
+    ranking.assign(sumasPorCiudad.begin(), sumasPorCiudad.end());
+    // Ordenar el vector de forma descendente basado en los ingresos
+    std::sort(ranking.begin(), ranking.end(), [](const std::pair<std::string, double> a, const std::pair<std::string, double> b) {
+        return a.second > b.second; 
+    });
+}

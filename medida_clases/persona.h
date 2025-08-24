@@ -78,6 +78,36 @@ public:
     // Muesta la edad de la persona mas longeva por pais utilizando apuntadores
     static void edadMasLongevaPaisRef(const std::vector<Persona>& personas);
 
+    // Agrupa las personas por calendario - Valor
+    static std::map<std::string, std::vector<Persona>> agruparCalendario(const std::vector<Persona> personas);
+
+    // Agrupa las personas por calendario - Referencia
+    static void agruparCalendarioRef(const std::vector<Persona>& personas, std::map<std::string, std::vector<Persona>>& calendario);
+
+    // Agrupar personas por ciudad - Valor
+    static std::map<std::string, std::vector<Persona>> agruparCiudad(const std::vector<Persona> personas);
+
+    // Agrupar personas por ciudad - Referencia
+    static void agruparCiudadRef(const std::vector<Persona>& personas, std::map<std::string, std::vector<Persona>>& ciudad);
+
+    // Declarantes de renta - Valor
+    static std::map<std::string, std::vector<Persona>> declarantesRenta(std::map<std::string, std::vector<Persona>> personas);
+
+    //Declarantes de renta - Referencia
+    static void declarantesRentaRef(const std::map<std::string, std::vector<Persona>>& personas, std::map<std::string, std::vector<Persona>>& declarantes);
+
+    // Ranking de riqueza por agrupación - Valor
+    static std::vector<std::pair<std::string, double>> rankingRiqueza(const std::map<std::string, std::vector<Persona>> calendario);
+
+    // Ranking de riqueza por agrupación - Referencia
+    static void rankingRiquezaRef(const std::map<std::string, std::vector<Persona>>& calendario, std::vector<std::pair<std::string, double>>& ranking);
+
+    //Ranking de riqueza por ciudad - Valor
+    static std::vector<std::pair<std::string, double>> rankingRiquezaCiudad(const std::map<std::string, std::vector<Persona>> ciudad); 
+
+    //Ranking de riqueza por ciudad - Referencia
+    static void rankingRiquezaCiudadRef(const std::map<std::string, std::vector<Persona>>& ciudad, std::vector<std::pair<std::string, double>>& ranking);
+
     // Agrupa personas por ciudad de nacimiento
     static std::map<std::string, std::vector<Persona>> agruparPersonasPorCiudad(const std::vector<Persona> personas);
 

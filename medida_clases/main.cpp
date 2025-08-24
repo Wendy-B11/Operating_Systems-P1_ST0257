@@ -5,7 +5,7 @@
 #include "persona.h"
 #include "generador.h"
 #include "monitor.h"
-
+#include <map>
 /**
  * Muestra el menú principal de la aplicación.
  * 
@@ -22,7 +22,13 @@ void mostrarMenu() {
     std::cout << "\n4. Mostrar estadísticas de rendimiento";
     std::cout << "\n5. Exportar estadísticas a CSV";
     std::cout << "\n6. Mostrar edad más longeva por país";
-    std::cout << "\n7. Salir";
+    std::cout << "\n7. Declarantes de renta -> [Valor]";
+    std::cout << "\n8. Declarantes de renta -> [Referencia]";
+    std::cout << "\n9. Ranking de riqueza por agrupación -> [Valor]";
+    std::cout << "\n10. Ranking de riqueza por agrupación -> [Referencia]";
+    std::cout << "\n11. Ranking de riqueza por ciudad -> [Valor]";
+    std::cout << "\n12. Ranking de riqueza por ciudad -> [Referencia]";
+    std::cout << "\n13. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -175,22 +181,112 @@ int main() {
                 break;
             }
 
-            case 7: // Salir
+            case 7: { //Declarantes de renta - Valor
+                std::map<std::string, std::vector<Persona>> agrupacion = Persona::agruparCalendario(*personas);
+                auto declarantes = Persona::declarantesRenta(agrupacion);
+                std::cout << "\n--- Declarantes de Renta por Calendario ---\n";
+                for (const auto& grupo : declarantes) {
+                    std::cout << "\n";
+                    std::cout << "--------- Calendario " << grupo.first << ": " << grupo.second.size() << " declarantes---------\n";
+                    std::cout << "\n";
+                    for (const Persona& persona : grupo.second) {
+                        persona.mostrarResumen();
+                        std::cout << "\n";
+                    }
+                }
+                break;
+   
+            }
+
+            case 8:{ //Declarantes de renta - Referencia
+                std::map<std::string, std::vector<Persona>> calendarioAgrupado;
+                Persona::agruparCalendarioRef(*personas, calendarioAgrupado);
+                std::map<std::string, std::vector<Persona>> declarantes;
+                Persona::declarantesRentaRef(calendarioAgrupado, declarantes);
+                std::cout << "\n--- Declarantes de Renta por Calendario (Referencia) ---\n";
+                for (const auto& grupo : declarantes) {
+                    std::cout << "\n";
+                    std::cout << "--------- Calendario " << grupo.first << ": " << grupo.second.size() << " declarantes---------\n";
+                    std::cout << "\n";
+                    for (const Persona& persona : grupo.second) {
+                        persona.mostrarResumen();
+                        std::cout << "\n";
+                    }
+                }
+                break;
+            }
+
+            case 9: { //Ranking de riqueza por agrupación - Valor
+                std::map<std::string, std::vector<Persona>> agrupacion = Persona::agruparCalendario(*personas);
+                auto ranking = Persona::rankingRiqueza(agrupacion);
+                std::cout << "\n--- Ranking de Riqueza por Calendario ---\n";
+                int posicion = 1;
+                for (const auto& par : ranking) {
+                    std::cout << posicion << ". Calendario '" << par.first << "': Suma de ingresos = " << par.second << std::endl;
+                    posicion++;
+                }
+                break;
+            }
+
+            case 10:{ //Ranking de riqueza por agrupación - Referencia
+                std::map<std::string, std::vector<Persona>> calendarioAgrupado;
+                Persona::agruparCalendarioRef(*personas, calendarioAgrupado);
+                std::vector<std::pair<std::string, double>> ranking;
+                Persona::rankingRiquezaRef(calendarioAgrupado, ranking);
+                std::cout << "\n--- Ranking de Riqueza por Calendario (Referencia) ---\n";
+                int posicionRef = 1;
+                for (const auto& par : ranking) {
+                    std::cout << posicionRef << ". Calendario '" << par.first << "': Suma de ingresos = " << par.second << std::endl;
+                    posicionRef++;
+                }
+                break;
+
+            }
+
+            case 11: { //Ranking de riqueza por ciudad - Valor
+                std::map<std::string, std::vector<Persona>> ciudad = Persona::agruparCiudad(*personas);
+                auto rankingCiudad = Persona::rankingRiquezaCiudad(ciudad);
+                std::cout << "\n--- Ranking de Riqueza por Ciudad ---\n";
+                int posicionCiudad = 1;
+                for (const auto& par : rankingCiudad) {
+                    std::cout << posicionCiudad << ". Ciudad '" << par.first << "': Suma de ingresos = " << par.second << std::endl;
+                    posicionCiudad++;
+                }
+                break;
+            }
+
+            case 12: { //Ranking de riqueza por ciudad - Referencia
+                std::map<std::string, std::vector<Persona>> ciudadAgrupada;
+                Persona::agruparCiudadRef(*personas, ciudadAgrupada);
+                std::vector<std::pair<std::string, double>> rankingCiudadRef;
+                Persona::rankingRiquezaCiudadRef(ciudadAgrupada, rankingCiudadRef);
+                std::cout << "\n--- Ranking de Riqueza por Ciudad (Referencia) ---\n";
+                int posicionCiudadRef = 1;
+                for (const auto& par : rankingCiudadRef) {
+                    std::cout << posicionCiudadRef << ". Ciudad '" << par.first << "': Suma de ingresos = " << par.second << std::endl;
+                    posicionCiudadRef++;
+                }
+                
+                break;
+            }
+
+            case 13: // Salir
                 std::cout << "Saliendo...\n";
                 break;
-                
+
             default:
+
                 std::cout << "Opción inválida!\n";
         }
         
         // Mostrar estadísticas de la operación (excepto para opciones 4,5,6)
-        if (opcion >= 0 && opcion <= 3) {
+        if (opcion >= 0 && opcion <= 12) {
             double tiempo = monitor.detener_tiempo();
             long memoria = monitor.obtener_memoria() - memoria_inicio;
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
         }
         
-    } while(opcion != 7);
+    } while(opcion != 13);
     
     return 0;
 }
