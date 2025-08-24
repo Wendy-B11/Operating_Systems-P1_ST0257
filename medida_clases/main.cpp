@@ -162,7 +162,7 @@ int main() {
             case 4: // Mostrar estadísticas de rendimiento
                 monitor.mostrar_resumen();
                 break;
-                
+            
             case 5: // Exportar estadísticas a CSV
                 monitor.exportar_csv();
                 break;
@@ -178,6 +178,8 @@ int main() {
                     persona.mostrarResumen();
                     std::cout << "\n"; 
                 }
+                std::cout << "\nUsando referencias por ciudad:\n";
+                Persona::edadMasLongevaCiudadRef(*personas);
                 break;
             }
 

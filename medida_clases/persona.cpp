@@ -92,7 +92,7 @@ void Persona::edadMasLongevaPaisRef(const std::vector<Persona>& personas){
     pPersonaMasVieja->mostrarResumen(); 
 }
 
-
+//Implementacion de edad mas longeva por ciudad con valores
 std::vector<Persona> Persona::edadMasLongevaCiudad(const std::vector<Persona> personas) {
     std::map<std::string, Persona> ciudadMasVieja;
     std::vector<Persona> resultado;
@@ -119,9 +119,39 @@ std::vector<Persona> Persona::edadMasLongevaCiudad(const std::vector<Persona> pe
     return resultado;
 }
 
+//Implementacion de edad mas lonegeva por ciudad utilizando referencias
+#include <vector>
+#include <string>
+#include <map>
 
+// ... (definición de la clase Persona)
 
+void Persona::edadMasLongevaCiudadRef(const std::vector<Persona>& personas) {
 
+    std::map<std::string, std::vector<Persona>> ciudad;
+    agruparCiudadRef(personas, ciudad);
+
+    for (const auto& par : ciudad) {
+        const std::string& ciudad = par.first; 
+        const std::vector<Persona>& personasCiudad = par.second;
+
+        if (personasCiudad.empty()) {
+            continue;
+        }
+
+        const Persona* pMasLongeva = &personasCiudad[0];
+
+        for (const Persona& personaActual : personasCiudad) {
+            if (personaActual.calcularEdad() > pMasLongeva->calcularEdad()) {
+                pMasLongeva = &personaActual;
+            }
+        }
+        
+        pMasLongeva->mostrarResumen();
+        std::cout << "\n";
+    }
+}
+    
 // Agrupar por calendario - Por Valor
 std::map<std::string, std::vector<Persona>> Persona::agruparCalendario(const std::vector<Persona> personas){
     std::map<std::string, std::vector<Persona>> calendario;
