@@ -1,11 +1,12 @@
 #ifndef PERSONA_H
 #define PERSONA_H
 
+#include <map>
+#include <vector>
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include <vector>
-#include <map>
+#include <memory>
 
 /**
  * Clase que representa una persona con datos personales y financieros.
@@ -113,6 +114,17 @@ public:
 
     // Muestra la edad de la persona mas longeva por ciudad utilizando apuntadores
     static void edadMasLongevaCiudadRef(const std::vector<Persona>& personas);
+    // --- FUNCIONES DE PATRIMONIO ---
+    
+    //muestra el mayor patrimonio por valor
+    static void mostrarMayorPatrimonioPorValor(std::vector<Persona> personas);
+
+    //muestra el mayor patrimonio por referencia
+    static void mostrarMayorPatrimonioPorReferencia(std::unique_ptr<std::vector<Persona>> personas);
+
+     // Agrupar personas por calendario (A/B/C) - Valor
+    static std::map<char, std::vector<Persona>> agruparPersonasPorCalendarioValor(const std::vector<Persona>& personas);
+
 };
 
 #endif // PERSONA_H

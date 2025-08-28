@@ -28,7 +28,9 @@ void mostrarMenu() {
     std::cout << "\n10. Ranking de riqueza por agrupación -> [Referencia]";
     std::cout << "\n11. Ranking de riqueza por ciudad -> [Valor]";
     std::cout << "\n12. Ranking de riqueza por ciudad -> [Referencia]";
-    std::cout << "\n13. Salir";
+    std::cout << "\n13. Mayor patrimonio -> [Valor]";
+    std::cout << "\n14. Mayor patrimonio -> [Referencia]";
+    std::cout << "\n15. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -272,7 +274,26 @@ int main() {
                 break;
             }
 
-            case 13: // Salir
+
+            case 13: { // Mayor patrimonio - Valor
+                if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+                Persona::mostrarMayorPatrimonioPorValor(*personas);
+                break;
+            }
+
+            case 14: { // Mayor patrimonio - Referencia
+                if (!personas || personas->empty()) {
+                    std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+                    break;
+                }
+                Persona::mostrarMayorPatrimonioPorReferencia(std::make_unique<std::vector<Persona>>(*personas));
+                break;
+            }
+
+            case 15: // Salir
                 std::cout << "Saliendo...\n";
                 break;
 
@@ -288,7 +309,7 @@ int main() {
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
         }
         
-    } while(opcion != 13);
+    } while(opcion != 15);
     
     return 0;
 }
