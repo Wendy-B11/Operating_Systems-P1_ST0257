@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <memory>
 
 // Estructura que representa una persona con datos personales y fiscales
 struct Persona {
@@ -206,5 +207,128 @@ inline void rankingRiquezaRef(const std::map<std::string, std::vector<Persona>>&
 }
 
 
+// Mayor patrimonio - Por Valor
+inline void mostrarMayorPatrimonioPorValor(std::vector<Persona> personas) {
+    if (personas.empty()) {
+        std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+        return;
+    }
+    std::cout << "\n--- Menú Patrimonio ---\n";
+    std::cout << "1. Mayor patrimonio en el país\n";
+    std::cout << "2. Mayor patrimonio por ciudad\n";
+    std::cout << "3. Mayor patrimonio por grupo (A/B/C)\n";
+    int subop;
+    std::cout << "\nSeleccione una opción: ";
+    std::cin >> subop;
+
+    if (subop == 1) {
+        Persona mayor = personas.at(0);
+        for (const auto& p : personas) {
+            if (p.patrimonio > mayor.patrimonio) {
+                mayor = p;
+            }
+        }
+        std::cout << "Persona con mayor patrimonio en el país:\n";
+        mayor.mostrarResumen();
+        std::cout << " Patrimonio: " << mayor.patrimonio << "\n";
+    } else if (subop == 2) {
+        auto gruposCiudad = agruparCiudad(personas);
+        std::cout << "\n--- Persona con mayor patrimonio por ciudad ---\n";
+        for (const auto& par : gruposCiudad) {
+            const std::string& ciudad = par.first;
+            const std::vector<Persona>& personasEnCiudad = par.second;
+            if (personasEnCiudad.empty()) continue;
+            Persona masRica = personasEnCiudad.at(0);
+            for (size_t i = 1; i < personasEnCiudad.size(); ++i) {
+                if (personasEnCiudad.at(i).patrimonio > masRica.patrimonio) {
+                    masRica = personasEnCiudad.at(i);
+                }
+            }
+            std::cout << ciudad << ": la persona con mayor patrimonio es ";
+            masRica.mostrarResumen();
+            std::cout << " con patrimonio: $" << masRica.patrimonio << "\n";
+        }
+    } else if (subop == 3) {
+        auto gruposPorCalendario = agruparCalendario(personas);
+        std::cout << "\n--- Persona con mayor patrimonio por grupo ---\n";
+        for (const auto& par : gruposPorCalendario) {
+            const std::string& grupo = par.first;
+            const std::vector<Persona>& personasEnGrupo = par.second;
+            if (personasEnGrupo.empty()) continue;
+            Persona masRica = personasEnGrupo[0];
+            for (size_t i = 1; i < personasEnGrupo.size(); ++i) {
+                if (personasEnGrupo[i].patrimonio > masRica.patrimonio) {
+                    masRica = personasEnGrupo[i];
+                }
+            }
+            std::cout << "Grupo " << grupo << ": la persona con mayor patrimonio es ";
+            masRica.mostrarResumen();
+            std::cout << " con patrimonio: $" << masRica.patrimonio << "\n";
+        }
+    }
+}
+
+// Mayor patrimonio - Por Referencia
+inline void mostrarMayorPatrimonioPorReferencia(std::unique_ptr<std::vector<Persona>> personas) {
+    if (!personas || personas->empty()) {
+        std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
+        return;
+    }
+    std::cout << "\n--- Menú Patrimonio ---\n";
+    std::cout << "1. Mayor patrimonio en el país\n";
+    std::cout << "2. Mayor patrimonio por ciudad\n";
+    std::cout << "3. Mayor patrimonio por grupo (A/B/C)\n";
+    int subop;
+    std::cout << "\nSeleccione una opción: ";
+    std::cin >> subop;
+
+    if (subop == 1) {
+        Persona mayor = personas->at(0);
+        for (const auto& p : *personas) {
+            if (p.patrimonio > mayor.patrimonio) {
+                mayor = p;
+            }
+        }
+        std::cout << "Persona con mayor patrimonio en el país:\n";
+        mayor.mostrarResumen();
+        std::cout << " Patrimonio: " << mayor.patrimonio << "\n";
+    } else if (subop == 2) {
+        std::map<std::string, std::vector<Persona>> gruposCiudad;
+        agruparCiudadRef(*personas, gruposCiudad);
+        std::cout << "\n--- Persona con mayor patrimonio por ciudad ---\n";
+        for (const auto& par : gruposCiudad) {
+            const std::string& ciudad = par.first;
+            const std::vector<Persona>& personasEnCiudad = par.second;
+            if (personasEnCiudad.empty()) continue;
+            Persona masRica = personasEnCiudad.at(0);
+            for (size_t i = 1; i < personasEnCiudad.size(); ++i) {
+                if (personasEnCiudad.at(i).patrimonio > masRica.patrimonio) {
+                    masRica = personasEnCiudad.at(i);
+                }
+            }
+            std::cout << ciudad << ": la persona con mayor patrimonio es ";
+            masRica.mostrarResumen();
+            std::cout << " con patrimonio: $" << masRica.patrimonio << "\n";
+        }
+    } else if (subop == 3) {
+        std::map<std::string, std::vector<Persona>> gruposPorCalendario;
+        agruparCalendarioRef(*personas, gruposPorCalendario);
+        std::cout << "\n--- Persona con mayor patrimonio por grupo ---\n";
+        for (const auto& par : gruposPorCalendario) {
+            const std::string& grupo = par.first;
+            const std::vector<Persona>& personasEnGrupo = par.second;
+            if (personasEnGrupo.empty()) continue;
+            Persona masRica = personasEnGrupo[0];
+            for (size_t i = 1; i < personasEnGrupo.size(); ++i) {
+                if (personasEnGrupo[i].patrimonio > masRica.patrimonio) {
+                    masRica = personasEnGrupo[i];
+                }
+            }
+            std::cout << "Grupo " << grupo << ": la persona con mayor patrimonio es ";
+            masRica.mostrarResumen();
+            std::cout << " con patrimonio: $" << masRica.patrimonio << "\n";
+        }
+    }
+}
 
 #endif // PERSONA_H
