@@ -27,6 +27,7 @@ struct Persona {
     // --- Métodos de visualización ---
     void mostrar() const;         // Muestra todos los detalles completos
     void mostrarResumen() const;  // Muestra versión compacta para listados
+    int calcularEdad() const;     // Calcula la edad de la persona
 };
 
 // Implementación de métodos inline para mantener la estructura simple
@@ -62,7 +63,124 @@ inline void agruparCiudadRef(const std::vector<Persona>& personas, std::map<std:
     for (const Persona& persona : personas){
         ciudad[persona.ciudadNacimiento].push_back(persona);
     }
-}   
+}
+
+inline int Persona::calcularEdad() const {
+        size_t pos = fechaNacimiento.find_last_of("/");
+        std::string anio = fechaNacimiento.substr(pos + 1);
+
+        int anioNacimiento = std::stoi(anio);
+        int anioActual = 2025; // Año actual
+
+        return anioActual - anioNacimiento;
+    }
+
+//promedio de edades - por valor
+inline double promedioEdadPais(const std::vector<Persona> personas) {
+    if (personas.empty()) {
+        return 0.0;
+    }
+
+    int sumaEdades = 0;
+    for (const Persona& persona : personas) {
+        sumaEdades += persona.calcularEdad();
+    }
+
+    return static_cast<double>(sumaEdades) / personas.size();
+}
+
+//promedio de edades - por referencia
+inline void promedioEdadPaisRef(const std::vector<Persona>& personas) {
+    if (personas.empty()) {
+        std::cout << 0.0;
+    }
+
+    int sumaEdades = 0;
+    for (const Persona& persona : personas) {
+        sumaEdades += persona.calcularEdad();
+    }
+
+    std::cout << static_cast<double>(sumaEdades) / personas.size();
+}
+
+//Implementacion de edad mas lonegeva por ciudad utilizando referencias
+inline void edadMasLongevaCiudadRef(const std::vector<Persona>& personas) {
+
+    std::map<std::string, std::vector<Persona>> ciudad;
+    agruparCiudadRef(personas, ciudad);
+
+    for (const auto& par : ciudad) {
+        const std::string& ciudad = par.first; 
+        const std::vector<Persona>& personasCiudad = par.second;
+
+        if (personasCiudad.empty()) {
+            continue;
+        }
+
+        const Persona* pMasLongeva = &personasCiudad[0];
+
+        for (const Persona& personaActual : personasCiudad) {
+            if (personaActual.calcularEdad() > pMasLongeva->calcularEdad()) {
+                pMasLongeva = &personaActual;
+            }
+        }
+        
+        pMasLongeva->mostrarResumen();
+        std::cout << "\n";
+    }
+}
+
+//Implementacion de edad mas longeva por ciudad con valores
+inline std::vector<Persona> edadMasLongevaCiudad(const std::vector<Persona> personas) {
+    std::map<std::string, Persona> ciudadMasVieja;
+    std::vector<Persona> resultado;
+
+    auto gruposc = agruparCiudad(personas);
+
+    for (const auto& par : gruposc) {
+        const std::string& ciudad = par.first;
+        const std::vector<Persona>& personasCiudad = par.second;
+
+        if (personasCiudad.empty()) {
+            continue;
+        }
+
+        Persona masLongeva = personasCiudad[0];
+
+        for (size_t i = 1; i < personasCiudad.size(); ++i) {
+            if (personasCiudad[i].calcularEdad() > masLongeva.calcularEdad()) {
+                masLongeva = personasCiudad[i];
+            }
+        }
+        resultado.push_back(masLongeva);
+    }
+    return resultado;
+}
+
+//Implementacion de edad mas longeva del pais con referencias
+inline void edadMasLongevaPaisRef(const std::vector<Persona>& personas){
+    const Persona* pPersonaMasVieja = &personas[0];
+
+    for (const Persona& personaActual : personas) {
+        if (personaActual.calcularEdad() > pPersonaMasVieja->calcularEdad()) {
+                        pPersonaMasVieja = &personaActual;
+        }
+    }
+
+    std::cout << "La persona más longeva es ";
+    pPersonaMasVieja->mostrarResumen(); 
+}
+
+//Implementacion de edad mas longeva del pais
+inline Persona edadMasLongevaPais(const std::vector<Persona> personas){
+    Persona vieja = personas[0];
+    for (size_t i = 1; i < personas.size(); ++i) {
+        if (personas[i].calcularEdad() > vieja.calcularEdad()) {
+            vieja = personas[i];
+        }
+    }
+    return vieja;
+}
 
 // Agrupar por calendario - Por Valor
 inline std::map<std::string, std::vector<Persona>> agruparCalendario(const std::vector<Persona> personas){

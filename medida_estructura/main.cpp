@@ -22,7 +22,9 @@ void mostrarMenu() {
     std::cout << "\n11. Ranking de riqueza por ciudad -> [Referencia]";
     std::cout << "\n12. Mayor patrimonio -> [Valor]";
     std::cout << "\n13. Mayor patrimonio -> [Referencia]";
-    std::cout << "\n14. Salir";
+    std::cout << "\n14. Persona mas longeva - [Valor]";
+    std::cout << "\n15. Persona mas longeva - [Referencia]";
+    std::cout << "\n16. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -236,6 +238,31 @@ int main() {
                 mostrarMayorPatrimonioPorReferencia(std::make_unique<std::vector<Persona>>(*personas));
                 break;
             }
+
+            case 14: {
+                Persona vieja = edadMasLongevaPais(*personas);
+                vieja.mostrarResumen();
+                std::cout << "\nMas longeva por ciudad:\n";
+                std::vector<Persona> viejaCiudad = edadMasLongevaCiudad(*personas);
+                for (const auto& persona : viejaCiudad) {
+                    persona.mostrarResumen();
+                    std::cout << "\n"; 
+                }
+                std::cout << "\nPromedio de edad en el país (valor):\n";
+                double promedio = promedioEdadPais(*personas);
+                std::cout << promedio << " años\n";
+                break;
+            }
+
+            case 15: {
+                std::cout << "\nUsando referencias:\n";
+                edadMasLongevaPaisRef(*personas);
+                std::cout << "\nUsando referencias por ciudad:\n";
+                edadMasLongevaCiudadRef(*personas);
+                std::cout << "\nPromedio de edad en el país (referencia):\n";
+                promedioEdadPaisRef(*personas);
+                break;
+            }
                 
             default:
                 std::cout << "Opción inválida!\n";
@@ -248,7 +275,7 @@ int main() {
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
         }
         
-    } while(opcion != 14);
+    } while(opcion != 16);
     
     return 0;
 }
