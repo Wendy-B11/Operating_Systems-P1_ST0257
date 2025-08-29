@@ -21,16 +21,17 @@ void mostrarMenu() {
     std::cout << "\n3. Buscar persona por ID";
     std::cout << "\n4. Mostrar estadísticas de rendimiento";
     std::cout << "\n5. Exportar estadísticas a CSV";
-    std::cout << "\n6. Mostrar edad más longeva por país";
-    std::cout << "\n7. Declarantes de renta -> [Valor]";
-    std::cout << "\n8. Declarantes de renta -> [Referencia]";
-    std::cout << "\n9. Ranking de riqueza por agrupación -> [Valor]";
-    std::cout << "\n10. Ranking de riqueza por agrupación -> [Referencia]";
-    std::cout << "\n11. Ranking de riqueza por ciudad -> [Valor]";
-    std::cout << "\n12. Ranking de riqueza por ciudad -> [Referencia]";
-    std::cout << "\n13. Mayor patrimonio -> [Valor]";
-    std::cout << "\n14. Mayor patrimonio -> [Referencia]";
-    std::cout << "\n15. Salir";
+    std::cout << "\n6. Mostrar edad más longeva por país -> [Valor]";
+    std::cout << "\n7. Mostrar edad más longeva por país -> [Referencia]";
+    std::cout << "\n8. Declarantes de renta -> [Valor]";
+    std::cout << "\n9. Declarantes de renta -> [Referencia]";
+    std::cout << "\n10. Ranking de riqueza por agrupación -> [Valor]";
+    std::cout << "\n11. Ranking de riqueza por agrupación -> [Referencia]";
+    std::cout << "\n12. Ranking de riqueza por ciudad -> [Valor]";
+    std::cout << "\n13. Ranking de riqueza por ciudad -> [Referencia]";
+    std::cout << "\n14. Mayor patrimonio -> [Valor]";
+    std::cout << "\n15. Mayor patrimonio -> [Referencia]";
+    std::cout << "\n16. Salir";
     std::cout << "\nSeleccione una opción: ";
 }
 
@@ -169,23 +170,32 @@ int main() {
                 monitor.exportar_csv();
                 break;
 
-            case 6: {
+            case 6: { //mas longevo por ciudad - valor
                 Persona vieja = Persona::edadMasLongevaPais(*personas);
                 vieja.mostrarResumen();
-                std::cout << "\nUsando referencias:\n";
-                Persona::edadMasLongevaPaisRef(*personas);
                 std::cout << "\nMas longeva por ciudad:\n";
                 std::vector<Persona> viejaCiudad = Persona::edadMasLongevaCiudad(*personas);
                 for (const auto& persona : viejaCiudad) {
                     persona.mostrarResumen();
                     std::cout << "\n"; 
                 }
-                std::cout << "\nUsando referencias por ciudad:\n";
-                Persona::edadMasLongevaCiudadRef(*personas);
+                std::cout << "\nPromedio de edad en el país (valor):\n";
+                double promedio = Persona::promedioEdadPais(*personas);
+                std::cout << promedio << " años\n";
                 break;
             }
 
-            case 7: { //Declarantes de renta - Valor
+            case 7:{ //Mas longevo por ciudad - referencia
+                std::cout << "\nUsando referencias:\n";
+                Persona::edadMasLongevaPaisRef(*personas);
+                std::cout << "\nUsando referencias por ciudad:\n";
+                Persona::edadMasLongevaCiudadRef(*personas);
+                std::cout << "\nPromedio de edad en el país (referencia):\n";
+                Persona::promedioEdadPaisRef(*personas);
+                break;
+            }
+
+            case 8: { //Declarantes de renta - Valor
                 std::map<std::string, std::vector<Persona>> agrupacion = Persona::agruparCalendario(*personas);
                 auto declarantes = Persona::declarantesRenta(agrupacion);
                 std::cout << "\n--- Declarantes de Renta por Calendario ---\n";
@@ -202,7 +212,7 @@ int main() {
    
             }
 
-            case 8:{ //Declarantes de renta - Referencia
+            case 9:{ //Declarantes de renta - Referencia
                 std::map<std::string, std::vector<Persona>> calendarioAgrupado;
                 Persona::agruparCalendarioRef(*personas, calendarioAgrupado);
                 std::map<std::string, std::vector<Persona>> declarantes;
@@ -220,7 +230,7 @@ int main() {
                 break;
             }
 
-            case 9: { //Ranking de riqueza por agrupación - Valor
+            case 10: { //Ranking de riqueza por agrupación - Valor
                 std::map<std::string, std::vector<Persona>> agrupacion = Persona::agruparCalendario(*personas);
                 auto ranking = Persona::rankingRiqueza(agrupacion);
                 std::cout << "\n--- Ranking de Riqueza por Calendario ---\n";
@@ -232,7 +242,7 @@ int main() {
                 break;
             }
 
-            case 10:{ //Ranking de riqueza por agrupación - Referencia
+            case 11:{ //Ranking de riqueza por agrupación - Referencia
                 std::map<std::string, std::vector<Persona>> calendarioAgrupado;
                 Persona::agruparCalendarioRef(*personas, calendarioAgrupado);
                 std::vector<std::pair<std::string, double>> ranking;
@@ -247,7 +257,7 @@ int main() {
 
             }
 
-            case 11: { //Ranking de riqueza por ciudad - Valor
+            case 12: { //Ranking de riqueza por ciudad - Valor
                 std::map<std::string, std::vector<Persona>> ciudad = Persona::agruparCiudad(*personas);
                 auto rankingCiudad = Persona::rankingRiquezaCiudad(ciudad);
                 std::cout << "\n--- Ranking de Riqueza por Ciudad ---\n";
@@ -259,7 +269,7 @@ int main() {
                 break;
             }
 
-            case 12: { //Ranking de riqueza por ciudad - Referencia
+            case 13: { //Ranking de riqueza por ciudad - Referencia
                 std::map<std::string, std::vector<Persona>> ciudadAgrupada;
                 Persona::agruparCiudadRef(*personas, ciudadAgrupada);
                 std::vector<std::pair<std::string, double>> rankingCiudadRef;
@@ -275,7 +285,7 @@ int main() {
             }
 
 
-            case 13: { // Mayor patrimonio - Valor
+            case 14: { // Mayor patrimonio - Valor
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -284,7 +294,7 @@ int main() {
                 break;
             }
 
-            case 14: { // Mayor patrimonio - Referencia
+            case 15: { // Mayor patrimonio - Referencia
                 if (!personas || personas->empty()) {
                     std::cout << "\nNo hay datos disponibles. Use opción 0 primero.\n";
                     break;
@@ -293,7 +303,7 @@ int main() {
                 break;
             }
 
-            case 15: // Salir
+            case 16: // Salir
                 std::cout << "Saliendo...\n";
                 break;
 
@@ -309,7 +319,7 @@ int main() {
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
         }
         
-    } while(opcion != 15);
+    } while(opcion != 16);
     
     return 0;
 }

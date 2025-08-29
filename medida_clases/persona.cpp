@@ -124,12 +124,6 @@ std::vector<Persona> Persona::edadMasLongevaCiudad(const std::vector<Persona> pe
 }
 
 //Implementacion de edad mas lonegeva por ciudad utilizando referencias
-#include <vector>
-#include <string>
-#include <map>
-
-// ... (definición de la clase Persona)
-
 void Persona::edadMasLongevaCiudadRef(const std::vector<Persona>& personas) {
 
     std::map<std::string, std::vector<Persona>> ciudad;
@@ -154,6 +148,35 @@ void Persona::edadMasLongevaCiudadRef(const std::vector<Persona>& personas) {
         pMasLongeva->mostrarResumen();
         std::cout << "\n";
     }
+}
+
+// Implementacion de promedio de edades por pais utilizando valores
+double Persona::promedioEdadPais(const std::vector<Persona> personas){
+    if (personas.empty()) {
+        return 0.0; 
+    }
+
+    int sumaEdades = 0;
+    for (const Persona& persona : personas) {
+        sumaEdades += persona.calcularEdad();
+    }
+
+    return static_cast<double>(sumaEdades) / personas.size();
+}
+
+//Implementacion de promedio de edades por pais utilizando referencias
+void Persona::promedioEdadPaisRef(const std::vector<Persona>& personas){
+    if (personas.empty()) {
+        std::cout << 0.0;
+    }
+
+    int sumaEdades = 0;
+    for (const Persona& persona : personas) {
+        sumaEdades += persona.calcularEdad();
+    }
+
+    std::cout << static_cast<double>(sumaEdades) / personas.size();
+
 }
     
 // Agrupar por calendario - Por Valor

@@ -79,6 +79,12 @@ public:
     // Muesta la edad de la persona mas longeva por pais utilizando apuntadores
     static void edadMasLongevaPaisRef(const std::vector<Persona>& personas);
 
+    //Muestra el promedio de edades por pais utilizando valores
+    static double promedioEdadPais(const std::vector<Persona> personas);
+
+    //Muestra el promedio de edades por pais utilizando apuntadores
+    static void promedioEdadPaisRef(const std::vector<Persona>& personas);
+
     // Agrupa las personas por calendario - Valor
     static std::map<std::string, std::vector<Persona>> agruparCalendario(const std::vector<Persona> personas);
 
