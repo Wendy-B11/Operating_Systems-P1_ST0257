@@ -26,6 +26,7 @@ public:
     }
     
     // Obtiene el consumo de memoria actual en KB usando /proc/self/statm
+    // Obtiene el consumo de memoria actual en KB usando /proc/self/statm
     long obtener_memoria() {
         // Abrir el archivo de estadísticas de memoria
         FILE* file = fopen("/proc/self/statm", "r");
@@ -34,21 +35,24 @@ public:
             return 0;
         }
         
-        long size, resident, shared, text, lib, data, dt;
-        if (fscanf(file, "%ld %ld %ld %ld %ld %ld %ld", 
-                  &size, &resident, &shared, &text, &lib, &data, &dt) != 7) {
+        // El segundo valor (RSS) es el que nos interesa: memoria residente en páginas.
+        long resident_pages;
+        if (fscanf(file, "%*d %ld", &resident_pages) != 1) {
             fclose(file);
+            // Opcional: imprimir un error si la lectura falla
+            // perror("Error al leer de /proc/self/statm");
             return 0;
         }
         
         fclose(file);
         
-        // Obtener el tamaño de página del sistema
-        long page_size = sysconf(_SC_PAGESIZE) / (1024*1024); // Convertir a KB
+        // Obtener el tamaño de página del sistema en bytes
+        long page_size_bytes = sysconf(_SC_PAGESIZE);
         
-        // Memoria residente en KB (páginas * tamaño de página en KB)
-        return resident * page_size;
-    }
+        // Calcular la memoria residente en KB
+        // (páginas * tamaño de página en bytes) / 1024
+        return resident_pages * page_size_bytes / 1024;
+}
     
     // Registra estadísticas para una operación
     void registrar(const std::string& operacion, double tiempo, long memoria) {

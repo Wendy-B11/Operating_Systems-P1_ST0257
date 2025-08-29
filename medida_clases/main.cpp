@@ -182,6 +182,9 @@ int main() {
                 std::cout << "\nPromedio de edad en el país (valor):\n";
                 double promedio = Persona::promedioEdadPais(*personas);
                 std::cout << promedio << " años\n";
+                double tiempo_detalle = monitor.detener_tiempo();
+                long memoria_detalle = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Longevo valor", tiempo_detalle, memoria_detalle);
                 break;
             }
 
@@ -192,6 +195,9 @@ int main() {
                 Persona::edadMasLongevaCiudadRef(*personas);
                 std::cout << "\nPromedio de edad en el país (referencia):\n";
                 Persona::promedioEdadPaisRef(*personas);
+                double tiempo_detalle = monitor.detener_tiempo();
+                long memoria_detalle = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Longevo referencia", tiempo_detalle, memoria_detalle);
                 break;
             }
 
@@ -239,6 +245,9 @@ int main() {
                     std::cout << posicion << ". Calendario '" << par.first << "': Suma de ingresos = " << par.second << std::endl;
                     posicion++;
                 }
+                double tiempo_detalle = monitor.detener_tiempo();
+                long memoria_detalle = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Mostrar detalle", tiempo_detalle, memoria_detalle);
                 break;
             }
 
@@ -292,6 +301,9 @@ int main() {
                 }
                 Persona::mostrarMayorPatrimonioPorValor(*personas);
                 break;
+                double tiempo_detalle = monitor.detener_tiempo();
+                long memoria_detalle = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Mostrar detalle", tiempo_detalle, memoria_detalle);
             }
 
             case 15: { // Mayor patrimonio - Referencia
@@ -313,7 +325,7 @@ int main() {
         }
         
         // Mostrar estadísticas de la operación (excepto para opciones 4,5,6)
-        if (opcion >= 0 && opcion <= 12) {
+        if (opcion >= 0 && opcion <= 15) {
             double tiempo = monitor.detener_tiempo();
             long memoria = monitor.obtener_memoria() - memoria_inicio;
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);

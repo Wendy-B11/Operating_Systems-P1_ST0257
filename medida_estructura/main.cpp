@@ -160,7 +160,9 @@ int main() {
                     }
                     std::cout << "\n";
                 }
-
+                double tiempo_mostrar = monitor.detener_tiempo();
+                long memoria_mostrar = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Declarantes de renta Valor", tiempo_mostrar, memoria_mostrar);
                 break;
             }
             case 7:{//Declarantes de renta - Por Referencia
@@ -177,6 +179,9 @@ int main() {
                     }
                     std::cout << "\n";
                 }
+                double tiempo_mostrar = monitor.detener_tiempo();
+                long memoria_mostrar = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Declarantes de renta Referencia", tiempo_mostrar, memoria_mostrar);
                 break;
             }
             case 8:{ //Ranking de riqueza por agrupación - Por Valor
@@ -185,7 +190,8 @@ int main() {
                 std::cout << "\n--- Ranking de Riqueza por Agrupación (Valor) ---\n";
                 for (const auto& par : ranking){
                     std::cout << "Grupo '" << par.first << "' - Ingresos Totales: " << par.second << "\n";
-                }   
+                }
+
                 break;
             }
 
@@ -208,6 +214,9 @@ int main() {
                 for (const auto& par : ranking){
                     std::cout << "Ciudad '" << par.first << "' - Ingresos Totales: " << par.second << "\n";
                 }
+                double tiempo_mostrar = monitor.detener_tiempo();
+                long memoria_mostrar = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Ranking de riqueza por ciudad", tiempo_mostrar, memoria_mostrar);
                 break;
             }
             case 11:{// Ranking de riqueza por ciudad - Por Referencia
@@ -219,6 +228,9 @@ int main() {
                 for (const auto& par : ranking){
                     std::cout << "Ciudad '" << par.first << "' - Ingresos Totales: " << par.second << "\n";
                 }   
+                double tiempo_mostrar = monitor.detener_tiempo();
+                long memoria_mostrar = monitor.obtener_memoria() - memoria_inicio;
+                monitor.registrar("Mostrar resumen", tiempo_mostrar, memoria_mostrar);
                 break;
             }
 
@@ -269,7 +281,7 @@ int main() {
         }
         
         // Mostrar estadísticas para las operaciones principales
-        if (opcion >= 0 && opcion <= 11) {
+        if (opcion >= 0 && opcion <= 15) {
             double tiempo = monitor.detener_tiempo();
             long memoria = monitor.obtener_memoria() - memoria_inicio;
             monitor.mostrar_estadistica("Opción " + std::to_string(opcion), tiempo, memoria);
